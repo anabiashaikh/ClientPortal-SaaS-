@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Check } from "lucide-react";
 import { useUIStore } from "@/store/uiStore";
+import { useTheme } from "next-themes";
 
 export default function SettingsPage() {
   const { userAvatar, setUserAvatar } = useUIStore();
@@ -37,7 +38,7 @@ export default function SettingsPage() {
   const [notifSaved, setNotifSaved] = useState(false);
 
   // Appearance state
-  const [theme, setTheme] = useState<"system" | "light" | "dark">("system");
+  const { theme, setTheme } = useTheme();
 
   // Security state
   const [currentPassword, setCurrentPassword] = useState("");
