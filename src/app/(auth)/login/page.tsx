@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,12 +15,32 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await signIn("credentials", { email, password, callbackUrl: "/" });
-    setLoading(false);
+    setError("");
+    
+    try {
+      const res = await signIn("credentials", { 
+        email, 
+        password, 
+        redirect: false 
+      });
+      
+      if (res?.error) {
+        setError("Invalid email or password");
+      } else {
+        router.push("/");
+        router.refresh();
+      }
+    } catch (err) {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleMagicLink = async (e: React.FormEvent) => {
@@ -56,6 +77,11 @@ export default function LoginPage() {
             
             <TabsContent value="password">
               <form onSubmit={handleCredentialsLogin} className="space-y-4">
+                {error && (
+                  <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
+                    {error}
+                  </div>
+                )}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <Input 
@@ -137,7 +163,7 @@ export default function LoginPage() {
           </Button>
         </CardContent>
         <CardFooter className="justify-center border-t py-4 text-sm text-muted-foreground">
-          Don't have an account? <a href="#" className="text-primary font-medium ml-1 hover:underline">Sign up</a>
+          Don't have an account? <a href="/register" className="text-primary font-medium ml-1 hover:underline">Sign up</a>
         </CardFooter>
       </Card>
     </div>
