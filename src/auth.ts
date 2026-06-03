@@ -14,7 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Resend({
       apiKey: process.env.RESEND_API_KEY,
-      from: "no-reply@yourdomain.com",
+      from: "Client Portal <onboarding@resend.dev>",
     }),
     Credentials({
       name: "Credentials",
