@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isRegistered = searchParams.get("registered") === "true";
 
   const handleCredentialsLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,6 +79,11 @@ export default function LoginPage() {
             
             <TabsContent value="password">
               <form onSubmit={handleCredentialsLogin} className="space-y-4">
+                {isRegistered && !error && (
+                  <div className="p-3 text-sm text-green-600 bg-green-50 rounded-md border border-green-200">
+                    Account created successfully! Please sign in.
+                  </div>
+                )}
                 {error && (
                   <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md">
                     {error}

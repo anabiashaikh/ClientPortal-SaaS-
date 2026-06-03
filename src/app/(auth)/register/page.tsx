@@ -32,20 +32,8 @@ export default function RegisterPage() {
         return;
       }
 
-      // Automatically sign in the user after successful registration
-      const signInRes = await signIn("credentials", {
-        email,
-        password,
-        redirect: false,
-      });
-
-      if (signInRes?.error) {
-        setError("Account created but auto-login failed.");
-        setLoading(false);
-      } else {
-        router.push("/");
-        router.refresh();
-      }
+      // Removed auto-login. Redirecting to login page to force manual login.
+      router.push("/login?registered=true");
     } catch (err) {
       setError("An unexpected error occurred.");
       setLoading(false);
